@@ -1,0 +1,14 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "JSON Server api files",
+  "main": "index.js",
+  "scripts": {
+    "start": "json-server -p 3001 -w db.json"
+  },
+  "author": "Heet Mehta",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.16.1"
+  }
+}
