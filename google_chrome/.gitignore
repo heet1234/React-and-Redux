@@ -23,4 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 /src/pages/keys.jsx
-/src/response.json
+/src/response.js
