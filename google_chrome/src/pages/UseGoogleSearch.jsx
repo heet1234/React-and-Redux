@@ -21,7 +21,7 @@ class UseGoogleSearch extends React.Component {
   }
 
   render() {
-    if (this.state.t != this.props.term) {
+    if (this.state.t !== this.props.term) {
       this.componentDidMount();
     }
     return (
