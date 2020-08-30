@@ -1,4 +1,8 @@
-const { validateSignupData, validateLoginData } = require("../util/validators");
+const {
+  validateSignupData,
+  validateLoginData,
+  reduceUserDetails,
+} = require("../util/validators");
 const config = require("../util/config");
 const { admin, db } = require("../util/admin");
 const firebase = require("firebase");
@@ -83,6 +87,44 @@ exports.login = (req, res) => {
     });
 };
 
+exports.addUserDetails = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+  db.doc(`/users/${req.user.handle}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ Message: "Details added successfully." });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getUserDetails = (req, res) => {
+  let userData = {};
+
+  db.doc(`/users/${req.user.handle}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        userData.credentials = doc.data();
+        return db
+          .collection("likes")
+          .where("userHandle", "==", req.user.handle)
+          .get();
+      }
+    })
+    .then((data) => {
+      userData.likes = [];
+      data.forEach((doc) => {
+        userData.likes.push(doc.data());
+      });
+      return res.json(userData);
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 exports.uploadImage = (req, res) => {
   const BusBoy = require("busboy");
   const path = require("path");
@@ -97,7 +139,7 @@ exports.uploadImage = (req, res) => {
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res.status(400).json({ error: "Wrong file type submitted" });
+      return res.status(400).json({ error: "Wrong file type submitted." });
     }
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
@@ -127,10 +169,9 @@ exports.uploadImage = (req, res) => {
         return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
       })
       .then(() => {
-        return res.json({ message: "Image uploaded successfully" });
+        return res.json({ Message: "Image uploaded successfully" });
       })
       .catch((err) => {
-        console.error(err);
         return res.status(500).json({ error: err.code });
       });
   });
