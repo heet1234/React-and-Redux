@@ -9,6 +9,6 @@ It helps you write applications that behave consistently, run in different envir
 ## How to Contribute
 
 Fork this repo to your personal account.
-Clone this repo using "git clone https://github.com/theroyalraj/React-and-Redux.git"
+Clone this repo using "git clone https://github.com/heet1234/React-and-Redux.git"
 Make changes in the any projects and push the changes to your Github.
 Request a Pull request.
